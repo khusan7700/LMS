@@ -1,5 +1,9 @@
-import Image from "next/image";
+import NonDashboardNavbar from "@/components/NonDashboardNavbar";
 
 export default function Home() {
-  return <div>salom</div>;
+  return (
+    <div className="nondashboard-layout">
+      <NonDashboardNavbar />
+    </div>
+  );
 }

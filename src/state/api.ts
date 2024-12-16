@@ -4,6 +4,7 @@ import { User } from "@clerk/nextjs/server";
 import { Clerk } from "@clerk/clerk-js";
 import { toast } from "sonner";
 
+//-------------------------------------------------------------- customBaseQuery -------------------------------------------------------------
 const customBaseQuery = async (
   args: string | FetchArgs,
   api: BaseQueryApi,
@@ -58,6 +59,7 @@ const customBaseQuery = async (
   }
 };
 
+//---------------------------------------------------------------------- API -------------------------------------------------------------
 export const api = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "api",
@@ -68,6 +70,8 @@ export const api = createApi({
     USER CLERK
     =============== 
     */
+
+    //------------------------------------------------------------------- updateUser -----------------------------------------------------
     updateUser: build.mutation<User, Partial<User> & { userId: string }>({
       query: ({ userId, ...updatedUser }) => ({
         url: `users/clerk/${userId}`,
@@ -82,6 +86,8 @@ export const api = createApi({
     COURSES
     =============== 
     */
+
+    //-------------------------------------------------------------------- getCourses ----------------------------------------------------
     getCourses: build.query<Course[], { category?: string }>({
       query: ({ category }) => ({
         url: "courses",
@@ -90,11 +96,13 @@ export const api = createApi({
       providesTags: ["Courses"],
     }),
 
+    //--------------------------------------------------------------------- getCourse ----------------------------------------------------
     getCourse: build.query<Course, string>({
       query: (id) => `courses/${id}`,
       providesTags: (result, error, id) => [{ type: "Courses", id }],
     }),
 
+    //--------------------------------------------------------------------- createCourse -------------------------------------------------
     createCourse: build.mutation<
       Course,
       { teacherId: string; teacherName: string }
@@ -107,6 +115,7 @@ export const api = createApi({
       invalidatesTags: ["Courses"],
     }),
 
+    //---------------------------------------------------------------------- updateCourse -------------------------------------------------
     updateCourse: build.mutation<
       Course,
       { courseId: string; formData: FormData }
@@ -121,6 +130,7 @@ export const api = createApi({
       ],
     }),
 
+    //---------------------------------------------------------------------- deleteCourse --------------------------------------------------
     deleteCourse: build.mutation<{ message: string }, string>({
       query: (courseId) => ({
         url: `courses/${courseId}`,
@@ -129,6 +139,7 @@ export const api = createApi({
       invalidatesTags: ["Courses"],
     }),
 
+    //---------------------------------------------------------------------- getUploadVideoUrl ---------------------------------------------
     getUploadVideoUrl: build.mutation<
       { uploadUrl: string; videoUrl: string },
       {
@@ -151,9 +162,13 @@ export const api = createApi({
     TRANSACTIONS
     =============== 
     */
+
+    //----------------------------------------------------------------------- getTransactions -------------------------------------------------
     getTransactions: build.query<Transaction[], string>({
       query: (userId) => `transactions?userId=${userId}`,
     }),
+
+    //------------------------ createStripePaymentIntent -------------------- createStripePaymentIntent ---------------------------------------
     createStripePaymentIntent: build.mutation<
       { clientSecret: string },
       { amount: number }
@@ -164,6 +179,8 @@ export const api = createApi({
         body: { amount },
       }),
     }),
+
+    //------------------------ createTransaction ---------------------------- createTransaction ----------------------------------------------
     createTransaction: build.mutation<Transaction, Partial<Transaction>>({
       query: (transaction) => ({
         url: "transactions",
@@ -177,11 +194,14 @@ export const api = createApi({
     USER COURSE PROGRESS
     =============== 
     */
+
+    //------------------------ getUserEnrolledCourses ------------------------- getUserEnrolledCourses ----------------------------------------
     getUserEnrolledCourses: build.query<Course[], string>({
       query: (userId) => `users/course-progress/${userId}/enrolled-courses`,
       providesTags: ["Courses", "UserCourseProgress"],
     }),
 
+    //------------------------------------------------------------------------- getUserCourseProgress ------------------------------------------
     getUserCourseProgress: build.query<
       UserCourseProgress,
       { userId: string; courseId: string }
@@ -191,6 +211,7 @@ export const api = createApi({
       providesTags: ["UserCourseProgress"],
     }),
 
+    //------------------------------------------------------------------------- updateUserCourseProgress ---------------------------------------
     updateUserCourseProgress: build.mutation<
       UserCourseProgress,
       {
@@ -206,6 +227,8 @@ export const api = createApi({
         method: "PUT",
         body: progressData,
       }),
+
+      //------------------------ invalidatesTags ------------------------------ invalidatesTags ------------------------------------------------
       invalidatesTags: ["UserCourseProgress"],
       async onQueryStarted(
         { userId, courseId, progressData },

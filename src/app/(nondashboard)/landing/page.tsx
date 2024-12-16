@@ -7,6 +7,7 @@ import { useCarousel } from "@/hooks/useCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetCoursesQuery } from "@/state/api";
 import CourseCardSearch from "@/components/CourseCardSearch";
+import { useRouter } from "next/navigation";
 
 const LoadingSkeleton = () => {
   return (
@@ -41,9 +42,16 @@ const LoadingSkeleton = () => {
 };
 
 const Landing = () => {
+  const router = useRouter();
   const currentImage = useCarousel({ totalImages: 3 });
   const { data: courses, isLoading, isError } = useGetCoursesQuery({});
+
+  const handleCourseClick = (courseId: string) => {
+    router.push(`/search?id=${courseId}`);
+  };
   console.log("courses---->", courses);
+
+  if (isLoading) return <LoadingSkeleton />;
 
   return (
     <motion.div
@@ -101,7 +109,7 @@ const Landing = () => {
           making the most
         </p>
 
-        <div className="leanding__tags">
+        <div className="landing__tags">
           {[
             "web development",
             "enterprise Iterator",
@@ -125,7 +133,10 @@ const Landing = () => {
                 transition={{ duration: 0.5, delay: index * 0.2 }}
                 viewport={{ amount: 0.4 }}
               >
-                <CourseCardSearch course={course} />
+                <CourseCardSearch
+                  course={course}
+                  onClick={() => handleCourseClick(course.courseId)}
+                />
               </motion.div>
             ))}
         </div>

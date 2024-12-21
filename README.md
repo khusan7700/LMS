@@ -4,14 +4,18 @@ First, run the development server:
 
 client --------> ```bash
                     npm run dev 
+
+
+
+                    
 server --------> ```bash
                     npm run dev 
 
-FrontEnd
+FrontEnd -------->
 nextJS 15
 
-BackEnd
+BackEnd -------->
 nodeJs
 
-DataBase
+DataBase -------->
 AWS

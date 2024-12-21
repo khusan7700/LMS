@@ -1,4 +1,4 @@
-import AccordionSections from "@/components/courses/AccordionSections";
+import AccordionSections from "@/components/AccordionSections";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
 import React from "react";

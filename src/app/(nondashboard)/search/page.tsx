@@ -1,7 +1,7 @@
 "use client";
 
-import Loading from "@/components/ui/Loading";
-import { useGetCourseQuery, useGetCoursesQuery } from "@/state/api";
+import Loading from "@/components/Loading";
+import { useGetCoursesQuery } from "@/state/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -27,15 +27,19 @@ const Search = () => {
   }, [courses, id]);
 
   if (isLoading) return <Loading />;
-  if (isError || !courses) return <div>Feiled to fetch courses</div>;
+  if (isError || !courses) return <div>Failed to fetch courses</div>;
 
   const handleCourseSelect = (course: Course) => {
     setSelectedCourse(course);
-    router.push(`/search?id=${course.courseId}`);
+    router.push(`/search?id=${course.courseId}`, {
+      scroll: false,
+    });
   };
 
   const handleEnrollNow = (courseId: string) => {
-    router.push(`/checkout?step=1&id=${courseId}&showSignUp=false`);
+    router.push(`/checkout?step=1&id=${courseId}&showSignUp=false`, {
+      scroll: false,
+    });
   };
 
   return (
@@ -46,7 +50,7 @@ const Search = () => {
       className="search"
     >
       <h1 className="search__title">List of available courses</h1>
-      <h2 className="search__subtitle">{courses.length} courses available</h2>
+      <h2 className="search__subtitle">{courses.length} courses avaiable</h2>
       <div className="search__content">
         <motion.div
           initial={{ y: 40, opacity: 0 }}
@@ -63,12 +67,13 @@ const Search = () => {
             />
           ))}
         </motion.div>
+
         {selectedCourse && (
           <motion.div
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="search__courses-course"
+            className="search__selected-course"
           >
             <SelectedCourse
               course={selectedCourse}
